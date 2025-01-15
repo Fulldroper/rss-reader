@@ -9,6 +9,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
+    "build-icons": "electron-icon-maker --input=D:\\pc\\workspace\\rss-client\\src\\assets\\icons\\icon.png --output=./src/assets/icons/generated/",
     "lint": "echo \"No linting configured\""
   },
   "repository": {
@@ -28,6 +29,7 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "autoprefixer": "^10.4.20",
     "electron": "34.0.0",
+    "electron-icon-maker": "^0.0.5",
     "postcss": "^8.5.1",
     "tailwindcss": "^3.4.17",
     "vite": "^5.4.11"
