@@ -1,0 +1,56 @@
+{
+  "name": "rss-client",
+  "productName": "rss-client",
+  "version": "1.0.0",
+  "description": "light rss reader with better UX",
+  "main": ".vite/build/main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fulldroper/rss-reader.git"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.6.0",
+    "@electron-forge/maker-deb": "^7.6.0",
+    "@electron-forge/maker-rpm": "^7.6.0",
+    "@electron-forge/maker-squirrel": "^7.6.0",
+    "@electron-forge/maker-zip": "^7.6.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.6.0",
+    "@electron-forge/plugin-fuses": "^7.6.0",
+    "@electron-forge/plugin-vite": "^7.6.0",
+    "@electron/fuses": "^1.8.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "autoprefixer": "^10.4.20",
+    "electron": "34.0.0",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17",
+    "vite": "^5.4.11"
+  },
+  "keywords": [
+    "rss",
+    "reader",
+    "desctop",
+    "electron",
+    "tailwind",
+    "vue"
+  ],
+  "author": {
+    "name": "Fulldroper",
+    "email": "40297614+Fulldroper@users.noreply.github.com"
+  },
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/Fulldroper/rss-reader/issues"
+  },
+  "homepage": "https://github.com/Fulldroper/rss-reader#readme",
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.1",
+    "vue": "^3.5.13"
+  }
+}
