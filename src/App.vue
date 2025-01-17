@@ -1,9 +1,65 @@
 <script setup>
-  import { ref, onMounted, isProxy, toRaw} from "vue";
+  import { ref, onMounted, useTemplateRef, isProxy, toRaw} from "vue";
   const isSortAndViewOpened = ref(false)
+  const isMoreTagsOpened = ref(false)
   const sortType = ref('new')
   const viewType = ref('list')
-  const text = 'Hello World'
+  const selectedTags = ref([])
+  const maxTagsShowed = ref(0)
+  const selectedTagsIcludes = tag => selectedTags.value.includes(tag);
+  const tagsContainer = ref(null)
+  
+  const tagsList = ref([
+    'tag1',
+    'tag2',
+    'tag3',
+    'tag4',
+    'tag5',
+    'tag6',
+    'tag7',
+    'tag8',
+    'tag9',
+    'tag10',
+    'tag11',
+    'tag12',
+  ]);
+
+  const selectTag = tag => {
+    if (typeof(tag) !== "string") return;
+
+    if(selectedTags.value.includes(tag)) {
+      selectedTags.value = selectedTags.value.filter(t => t != tag)
+    } else {
+      selectedTags.value.push(tag);
+    }
+  }
+
+  const updateMaxTagsShowed = () => {
+    const tag_mp = 28
+    const fontSize = 10
+    const max = tagsContainer.value.clientWidth - 78
+    let px_buff = 0
+    let i_max = 0
+  
+    tagsList.value.forEach(t => {
+      const w = (t.length * fontSize) + tag_mp;
+      px_buff += w
+      if (px_buff < max) {
+        i_max+=1
+      }
+    })
+  
+    maxTagsShowed.value=i_max
+  }
+
+  const onReady = () => {
+    updateMaxTagsShowed()
+
+    window.onresize = updateMaxTagsShowed
+  }
+
+  defineExpose({ tagsContainer })
+  onMounted(onReady)
 </script>
 
 <template>
@@ -41,18 +97,48 @@
             <div>
               <div class="font-semibold px-1.5 pb-1">Sort by</div>
               <div class="font-thin gap-1.5">
-                <div @click="sortType='abc'" :class="`${sortType == 'abc'? 'underline': ''} cursor-pointer px-1.5 no-drag py-1 hover:bg-emerald-800 hover:text-blue-50 rounded`">Alphabetically</div>
-                <div @click="sortType='new'" :class="`${sortType == 'new'? 'underline': ''} cursor-pointer px-1.5 no-drag py-1 hover:bg-emerald-800 hover:text-blue-50 rounded`">New ones first</div>
-                <div @click="sortType='old'" :class="`${sortType == 'old'? 'underline': ''} cursor-pointer px-1.5 no-drag py-1 hover:bg-emerald-800 hover:text-blue-50 rounded`">First the old</div>
+                <div @click="sortType='abc'" class="cursor-pointer px-1.5 no-drag py-1 hover:bg-emerald-800 group rounded flex flex-row items-center justify-between">
+                  <div class="group-hover:text-blue-50 no-drag">Alphabetically</div>
+                  <div class="w-4 h-4 rounded-full border-2 border-emerald-800 no-drag group-hover:border-emerald-500 p-0.5">
+                    <div :class="`w-full h-full rounded-full no-drag ${sortType == 'abc'? 'bg-emerald-700 no-drag group-hover:bg-emerald-300': ''}`"></div>
+                  </div>
+                </div>
+                <div @click="sortType='new'" class="cursor-pointer px-1.5 no-drag py-1 hover:bg-emerald-800 group rounded flex flex-row items-center justify-between">
+                  <div class="group-hover:text-blue-50 no-drag">New ones first</div>
+                  <div class="w-4 h-4 rounded-full border-2 border-emerald-800 no-drag group-hover:border-emerald-500 p-0.5">
+                    <div :class="`w-full h-full rounded-full no-drag ${sortType == 'new'? 'bg-emerald-700 no-drag group-hover:bg-emerald-300': ''}`"></div>
+                  </div>
+                </div>
+                <div @click="sortType='old'" class="cursor-pointer px-1.5 no-drag py-1 hover:bg-emerald-800 group rounded flex flex-row items-center justify-between">
+                  <div class="group-hover:text-blue-50 no-drag">First the old</div>
+                  <div class="w-4 h-4 rounded-full border-2 border-emerald-800 no-drag group-hover:border-emerald-500 p-0.5">
+                    <div :class="`w-full h-full rounded-full no-drag ${sortType == 'old'? 'bg-emerald-700 no-drag group-hover:bg-emerald-300': ''}`"></div>
+                  </div>  
+                </div>
               </div>
             </div>
             <hr class="my-2 border-emerald-900">
             <div>
               <div class="font-semibold px-1.5 pb-1">View like</div>
               <div class="font-thin gap-1.5">
-                <div @click="viewType='list'" :class="`${viewType == 'list'? 'underline': ''} cursor-pointer px-1.5 no-drag py-1 hover:bg-emerald-800 hover:text-blue-50 rounded`">List</div>
-                <div @click="viewType='gallery'" :class="`${viewType == 'gallery'? 'underline': ''} cursor-pointer px-1.5 no-drag py-1 hover:bg-emerald-800 hover:text-blue-50 rounded`">Gallery</div>
-                <div @click="viewType='feed'" :class="`${viewType == 'feed'? 'underline': ''} cursor-pointer px-1.5 no-drag py-1 hover:bg-emerald-800 hover:text-blue-50 rounded`">Feed posts</div>
+                <div @click="viewType='list'" class="cursor-pointer px-1.5 no-drag py-1 hover:bg-emerald-800 group rounded flex flex-row items-center justify-between">
+                  <div class="group-hover:text-blue-50 no-drag">List</div>
+                  <div class="w-4 h-4 rounded-full border-2 border-emerald-800 no-drag group-hover:border-emerald-500 p-0.5">
+                    <div :class="`w-full h-full rounded-full no-drag ${viewType == 'list'? 'bg-emerald-700 no-drag group-hover:bg-emerald-300': ''}`"></div>
+                  </div>  
+                </div>
+                <div @click="viewType='gallery'" class="cursor-pointer px-1.5 no-drag py-1 hover:bg-emerald-800 group rounded flex flex-row items-center justify-between">
+                  <div class="group-hover:text-blue-50 no-drag">Gallery</div>
+                  <div class="w-4 h-4 rounded-full border-2 border-emerald-800 no-drag group-hover:border-emerald-500 p-0.5">
+                    <div :class="`w-full h-full rounded-full no-drag ${viewType == 'gallery'? 'bg-emerald-700 no-drag group-hover:bg-emerald-300': ''}`"></div>
+                  </div>
+                </div>
+                <div @click="viewType='feed'" class="cursor-pointer px-1.5 no-drag py-1 hover:bg-emerald-800 group rounded flex flex-row items-center justify-between">
+                  <div class="group-hover:text-blue-50 no-drag">Feed posts</div>
+                  <div class="w-4 h-4 rounded-full border-2 border-emerald-800 no-drag group-hover:border-emerald-500 p-0.5">
+                    <div :class="`w-full h-full rounded-full no-drag ${viewType == 'feed'? 'bg-emerald-700 no-drag group-hover:bg-emerald-300': ''}`"></div>
+                  </div>
+                </div>
               </div>
             </div>
             <hr class="my-2 border-emerald-900">
@@ -64,17 +150,48 @@
         </div>
       </div>
       <div class="text-emerald-900 select-none">|</div>
-      <div class="w-full overflow-y-auto flex flex-row gap-2 no-drag">
-        <div class="no-drag cursor-pointer select-none">tags</div>
-        <div class="no-drag cursor-pointer select-none">tags</div>
-        <div class="no-drag cursor-pointer select-none">tags</div>
-        <div class="no-drag cursor-pointer select-none">tags</div>
-        <div class="no-drag cursor-pointer select-none">tags</div>
-        <div class="no-drag cursor-pointer select-none">tags</div>
-        <div class="no-drag cursor-pointer select-none">tags</div>
-        <div class="no-drag cursor-pointer select-none">tags</div>
+      <div ref="tagsContainer" class="w-full overflow-y-auto flex flex-row no-drag" @click="selectTag">
+        <div v-for="(tag, i) of tagsList" :key="tag">
+          <div 
+            @click="selectTag(tag)"
+            v-if="i < maxTagsShowed" 
+            :class="`${selectedTagsIcludes(tag) ? 'bg-emerald-800':''} mr-2 no-drag cursor-pointer select-none px-2.5 py-1 bg-emerald-950 rounded-2xl text-base`"
+          >
+            {{ tag }}
+          </div>
+        </div>
+        <div v-if="tagsList.length > maxTagsShowed" class="no-drag cursor-pointer select-none px-2.5 py-1 bg-emerald-950 rounded-2xl flex flex-row items-center justify-end">
+          <div @click="isMoreTagsOpened=!isMoreTagsOpened" class="no-drag">More</div>
+          <svg v-if="isMoreTagsOpened" class="w-5 h-5 no-drag" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path class="fill-blue-100" d="M5.30001 14.7C5.48694 14.8832 5.73826 14.9858 6.00001 14.9858C6.26176 14.9858 6.51308 14.8832 6.70001 14.7L12 9.41999L17.3 14.72C17.4925 14.8826 17.7392 14.9665 17.9908 14.955C18.2425 14.9436 18.4805 14.8375 18.6574 14.6581C18.8343 14.4787 18.9369 14.2392 18.9448 13.9874C18.9527 13.7356 18.8653 13.4901 18.7 13.3L12.7 7.29999C12.5131 7.11676 12.2618 7.01413 12 7.01413C11.7383 7.01413 11.4869 7.11676 11.3 7.29999L5.30001 13.3C5.20628 13.3929 5.13189 13.5036 5.08112 13.6254C5.03035 13.7473 5.00421 13.878 5.00421 14.01C5.00421 14.142 5.03035 14.2727 5.08112 14.3946C5.13189 14.5164 5.20628 14.627 5.30001 14.72V14.7Z"/>
+          </svg>
+          <svg v-else class="w-5 h-5 no-drag" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path class="fill-blue-100" d="M5.29999 9.3C5.48692 9.11678 5.73824 9.01415 5.99999 9.01415C6.26175 9.01415 6.51307 9.11678 6.69999 9.3L12 14.59L17.3 9.29C17.3904 9.18601 17.5013 9.10182 17.6258 9.04272C17.7503 8.98362 17.8856 8.95089 18.0233 8.94657C18.1611 8.94225 18.2982 8.96644 18.4261 9.01762C18.5541 9.06881 18.6701 9.14588 18.7668 9.244C18.8635 9.34213 18.939 9.45918 18.9883 9.58783C19.0377 9.71648 19.0599 9.85394 19.0537 9.9916C19.0474 10.1292 19.0127 10.2641 18.9519 10.3877C18.891 10.5114 18.8053 10.6211 18.7 10.71L12.7 16.71C12.5131 16.8932 12.2617 16.9959 12 16.9959C11.7382 16.9959 11.4869 16.8932 11.3 16.71L5.29999 10.71C5.20627 10.617 5.13187 10.5064 5.0811 10.3846C5.03033 10.2627 5.0042 10.132 5.0042 10C5.0042 9.86799 5.03033 9.73729 5.0811 9.61543C5.13187 9.49357 5.20627 9.38297 5.29999 9.29V9.3Z"/>
+          </svg>
+          <div v-if="isMoreTagsOpened" class="z-10 absolute top-40 max-w-64">
+            <div class="bg-emerald-950 px-2 py-2 rounded-md">
+              <div class="font-semibold px-1.5 flex flex-row items-center pb-2">
+                <div class="pr-2">Select tag</div>
+                <div class="text-sm bg-emerald-800 w-6 h-6 flex justify-center items-center rounded-full">{{ selectedTags.length }}</div>
+              </div>
+              <div class="flex flex-row flex-wrap">
+                <div v-for="(tag, i) of tagsList" :key="tag">
+                  <div @click="selectTag(tag)" v-if="i >= maxTagsShowed"
+                      :class="`${selectedTagsIcludes(tag) ? 'border-emerald-500':'border-emerald-900'} mr-2 no-drag border cursor-pointer select-none px-2.5 py-1 bg-emerald-900 rounded-2xl text-base w-max mb-2`"
+                    >
+                     {{ tag }}
+                  </div>
+                </div>
+              </div>
+              <hr class="my-2 border-emerald-900">
+              <div @click="selectedTags=[]" class="cursor-pointer px-1.5 no-drag py-1 hover:text-emerald-300 rounded text-emerald-500 ">
+                Clear all
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <h1 class="text-blue-100">💖 {{text}}!</h1>
+    <h1 class="text-blue-100">💖 {{selectedTags}}!</h1>
   </div>
 </template>
